@@ -32,10 +32,12 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.MainScreen.route){
 
+        // Screen 1
         composable(route = Screen.MainScreen.route){
             MainScreen(navController = navController)
         }
 
+        // Screen 2
         composable(
             // pass either "/{name}" [mandatory to give name] OR "?name = {name}"
             route = Screen.DetailScreen.route + "/{name}",
