@@ -1,5 +1,6 @@
 package com.example.navigation_jetpack
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -49,7 +51,10 @@ fun Navigation() {
                 }
             )
         ){ // backStackEntry
-            DetailScreen(name = it.arguments?.getString("name"))
+            DetailScreen(
+                text = it.arguments?.getString("name"),
+                navController = navController
+            )
         }
 
     }
@@ -87,17 +92,53 @@ fun MainScreen(navController: NavController) {
             },
             modifier = Modifier.align(Alignment.End)
             ) {
-            Text(text = "To DetailScreen")
+            Text(text = "To DetailScreen / 2nd Screen")
+        }
+        val activity = (LocalContext.current as? Activity)
+        Button(onClick = {
+//            navController.popBackStack()
+            activity?.finish()
+        }) {
+            Text("Exit")
         }
     }
 }
 
 
 @Composable
-fun DetailScreen(name: String?) {
+fun DetailScreen(text: String?, navController: NavController) {
     Box( contentAlignment = Alignment.Center
-        ,modifier = Modifier.fillMaxSize()
+        ,modifier = Modifier
+            .fillMaxSize()
     ){
-        Text(text = "Hello $name")
+
+        Column {
+            Text(text = "Hello $text")
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = {
+                    navController.navigate(Screen.MainScreen.route)
+                },
+                modifier = Modifier
+            ) {
+                Text(text = "To Main Screen / 1st Screen")
+            }
+
+            val activity = (LocalContext.current as? Activity)
+
+            Button(onClick = {
+                navController.popBackStack()
+            }) {
+                Text("Back")
+            }
+            Button(onClick = {
+//                navController.popBackStack()
+                activity?.finish()
+            }) {
+                Text("Exit")
+            }
+        }
     }
+
 }
